@@ -142,3 +142,55 @@ console.log(swordsman.destroy()); // Sir Mustachio was removed from the game.
 // * Create Villain and Hero constructor functions that inherit from the Humanoid constructor function.  
 // * Give the Hero and Villains different methods that could be used to remove health points from objects which could result in destruction if health gets to 0 or drops below 0;
 // * Create two new objects, one a villain and one a hero and fight it out with methods!
+
+function Hero(heroAttributes) {
+  Humanoid.call(this, heroAttributes);
+  this.attackPower = heroAttributes.attackPower;
+}
+
+Hero.prototype = Object.create(Humanoid.prototype);
+
+Hero.prototype.energyBlast = function (Villain) {
+  console.log(`${this.name} did ${this.attackPower} damage.`);
+  console.log(Villain.takeDamage());
+
+  Villain.healthPoints -= this.attackPower;
+  console.log(`${Villain.name} has ${Villain.healthPoints} left.`);
+
+  if (Villain.healthPoints <= 0)
+    console.log(Villain.destroy());
+};
+
+function Villain(villainAttributes) {
+  Humanoid.call(this, villainAttributes);
+  this.attackPower = villainAttributes.attackPower;
+}
+
+Villain.prototype = Object.create(Humanoid.prototype);
+
+Villain.prototype.eyeBeam = function (Hero) {
+  console.log(`${this.name} did ${this.attackPower} damage.`);
+  console.log(Hero.takeDamage());
+
+  Hero.healthPoints -= this.attackPower;
+  console.log(`${Hero.name} has ${Hero.healthPoints} left.`);
+
+  if (Hero.healthPoints <= 0)
+    console.log(Hero.destroy());
+};
+
+const tor = new Hero({
+  name: "tor",
+  healthPoints: 50,
+  attackPower: 15
+});
+
+const rot = new Villain({
+  name: "rot",
+  healthPoints: 50,
+  attackPower: 25
+});
+
+rot.eyeBeam(tor);
+tor.energyBlast(rot);
+rot.eyeBeam(tor);
